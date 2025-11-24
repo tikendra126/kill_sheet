@@ -1,0 +1,19 @@
+{
+    "name": "kill-sheet-calculator",
+    "version": "1.0.0",
+    "description": "Professional web-based calculator for well control engineering calculations",
+    "main": "index.html",
+    "scripts": {
+        "dev": "python3 -m http.server 8000",
+        "preview": "python3 -m http.server 8000"
+    },
+    "keywords": [
+        "well-control",
+        "drilling",
+        "engineering",
+        "calculator",
+        "oil-gas"
+    ],
+    "author": "Well Control Engineering Team",
+    "license": "MIT"
+}

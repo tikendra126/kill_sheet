@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kill Sheet Calculator - Well Control</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>KILL SHEET CALCULATOR</h1>
+            <p class="subtitle">Well Control Calculation Worksheet</p>
+        </header>
+
+        <div class="form-wrapper" id="killsheet-content">
+            <!-- Well Information Section -->
+            <section class="form-section">
+                <h2>Well Information</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="hole_diameter">Hole Diameter</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hole_diameter" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="hole_depth">Hole Depth (TVD)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hole_depth" step="0.01" min="0">
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="current_mud_weight">Current Mud Weight</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="current_mud_weight" step="0.01" min="0">
+                            <span class="unit">ppg</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="normal_circulating_pressure">Normal Circulating Pressure</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="normal_circulating_pressure" step="0.01" min="0">
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="user_stroke_pressure">Slow Pump Pressure</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="user_stroke_pressure" step="0.01" min="0">
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="strokes_per_min">Slow Pump Speed</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="strokes_per_min" step="1" min="0">
+                            <span class="unit">spm</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="pump_capacity">Pump Capacity</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="pump_capacity" step="0.001" min="0">
+                            <span class="unit">bbl/stroke</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kick Data Section -->
+            <section class="form-section">
+                <h2>Kick Data</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="sidpp">Drill Pipe Shut-In Pressure (SIDPP)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="sidpp" step="0.01" min="0">
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="sicp">Casing Shut-In Pressure (SICP)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="sicp" step="0.01" min="0">
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="pit_gain">Pit Gain</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="pit_gain" step="0.01" min="0">
+                            <span class="unit">bbl</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Casing Data Section -->
+            <section class="form-section">
+                <h2>Casing Data</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="casing_id">Last Casing ID</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="casing_id" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="casing_od">Last Casing OD</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="casing_od" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="casing_grade">Casing Grade</label>
+                        <div class="input-with-unit">
+                            <input type="text" id="casing_grade">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="casing_linear_weight">Casing Linear Weight</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="casing_linear_weight" step="0.01" min="0">
+                            <span class="unit">lb/ft</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="casing_setting_depth">Casing Setting Depth</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="casing_setting_depth" step="0.01" min="0">
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Drill Collar Data Section -->
+            <section class="form-section">
+                <h2>Drill Collar Data</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="dc_od">Drill Collar OD</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="dc_od" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="dc_id">Drill Collar ID</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="dc_id" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="dc_length">Drill Collar Length</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="dc_length" step="0.01" min="0">
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Drill Pipe Data Section -->
+            <section class="form-section">
+                <h2>Drill Pipe Data</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="dp_od">Drill Pipe OD</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="dp_od" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="dp_id">Drill Pipe ID</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="dp_id" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="dp_nominal_weight">Drill Pipe Nominal Weight</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="dp_nominal_weight" step="0.01" min="0">
+                            <span class="unit">lb/ft</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HWDP Section -->
+            <section class="form-section">
+                <h2>Heavy Weight Drill Pipe (HWDP)</h2>
+                <div class="input-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="hwdp_present">
+                        HWDP Present
+                    </label>
+                </div>
+                <div class="input-grid" id="hwdp-inputs" style="display: none;">
+                    <div class="input-group">
+                        <label for="hwdp_od">HWDP OD</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hwdp_od" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="hwdp_id">HWDP ID</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hwdp_id" step="0.01" min="0">
+                            <span class="unit">in</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="hwdp_length">HWDP Length</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hwdp_length" step="0.01" min="0">
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calculated Results Section -->
+            <section class="form-section results-section">
+                <h2>Kill Parameters</h2>
+                <div class="results-grid">
+                    <div class="result-group">
+                        <label>Kill Mud Weight</label>
+                        <div class="result-value">
+                            <span id="kill_mud_weight">--</span>
+                            <span class="unit">ppg</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Initial Circulating Pressure (ICP)</label>
+                        <div class="result-value">
+                            <span id="icp">--</span>
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Final Circulating Pressure (FCP)</label>
+                        <div class="result-value">
+                            <span id="fcp">--</span>
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Pressure Drop per 100 Strokes</label>
+                        <div class="result-value">
+                            <span id="pressure_drop_100">--</span>
+                            <span class="unit">psi</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Volume & Stroke Calculations -->
+            <section class="form-section results-section">
+                <h2>Volume & Stroke Calculations</h2>
+                <div class="results-grid">
+                    <div class="result-group">
+                        <label>Drill String Internal Volume</label>
+                        <div class="result-value">
+                            <span id="drill_string_volume">--</span>
+                            <span class="unit">bbl</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Surface-to-Bit Strokes</label>
+                        <div class="result-value">
+                            <span id="surface_to_bit_strokes">--</span>
+                            <span class="unit">strokes</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Total Annular Capacity</label>
+                        <div class="result-value">
+                            <span id="total_annular_capacity">--</span>
+                            <span class="unit">bbl</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Bit-to-Surface Strokes</label>
+                        <div class="result-value">
+                            <span id="bit_to_surface_strokes">--</span>
+                            <span class="unit">strokes</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Total Strokes</label>
+                        <div class="result-value">
+                            <span id="total_strokes">--</span>
+                            <span class="unit">strokes</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Open-hole Depth</label>
+                        <div class="result-value">
+                            <span id="open_hole_depth">--</span>
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Open-hole DP Length</label>
+                        <div class="result-value">
+                            <span id="open_hole_dp_length">--</span>
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Total DP Length</label>
+                        <div class="result-value">
+                            <span id="total_dp_length">--</span>
+                            <span class="unit">ft</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Time Calculations -->
+            <section class="form-section results-section">
+                <h2>Time Calculations</h2>
+                <div class="results-grid">
+                    <div class="result-group">
+                        <label>Surface-to-Bit Time</label>
+                        <div class="result-value">
+                            <span id="time_surface_to_bit">--</span>
+                            <span class="unit">min</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Bit-to-Surface Time</label>
+                        <div class="result-value">
+                            <span id="bit_to_surface_time">--</span>
+                            <span class="unit">min</span>
+                        </div>
+                    </div>
+                    <div class="result-group">
+                        <label>Total Pumping Time</label>
+                        <div class="result-value">
+                            <span id="total_pumping_time">--</span>
+                            <span class="unit">min</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Drillpipe Pressure Schedule -->
+            <section class="form-section">
+                <h2>Drillpipe Pressure Circulating Schedule</h2>
+                <div class="table-wrapper">
+                    <table id="pressure-schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Strokes</th>
+                                <th>Pressure (psi)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pressure-schedule-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Pressure Chart -->
+            <section class="form-section">
+                <h2>Pressure vs Strokes Chart</h2>
+                <div class="chart-container">
+                    <canvas id="pressureChart"></canvas>
+                </div>
+            </section>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button type="button" id="reset-btn" class="btn btn-secondary">Reset Form</button>
+            <button type="button" id="download-pdf-btn" class="btn btn-primary">Download PDF</button>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Kill Sheet Calculator | Well Control Engineering</p>
+        </footer>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>
